@@ -1,12 +1,4 @@
-from us_visa.logger import logging
-from us_visa.exception import UsVisaException
-import os
-import sys
+from us_visa.pipline.training_pipeline import TrainPipeline
 
-if __name__ == '__main__':
-    logging.info('Started')
-    try:
-        a = 1/0
-        logging.info('Division by zero')
-    except Exception as e:
-        raise UsVisaException(e,sys)
+obj = TrainPipeline()
+obj.run_pipeline()
