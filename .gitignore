@@ -124,6 +124,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.usvisa
 env/
 venv/
 ENV/
