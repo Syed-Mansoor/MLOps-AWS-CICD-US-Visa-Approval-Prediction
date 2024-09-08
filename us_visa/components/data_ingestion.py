@@ -3,7 +3,7 @@ import sys
 
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
-
+import pandas as pd
 from us_visa.entity.config_entity import DataIngestionConfig
 from us_visa.entity.artifact_entity import DataIngestionArtifact
 from us_visa.exception import USvisaException
@@ -49,7 +49,7 @@ class DataIngestion:
             raise USvisaException(e,sys)
         
 
-    def split_data_as_train_test(self,dataframe: DataFrame) ->None:
+    def split_data_as_train_test(self, dataframe: pd.DataFrame) -> None:
         """
         Method Name :   split_data_as_train_test
         Description :   This method splits the dataframe into train set and test set based on split ratio 
@@ -59,24 +59,27 @@ class DataIngestion:
         """
         logging.info("Entered split_data_as_train_test method of Data_Ingestion class")
 
-        try:
-            train_set, test_set = train_test_split(dataframe, test_size=self.data_ingestion_config.train_test_split_ratio)
-            logging.info("Performed train test split on the dataframe")
-            logging.info(
-                "Exited split_data_as_train_test method of Data_Ingestion class"
-            )
-            dir_path = os.path.dirname(self.data_ingestion_config.training_file_path)
-            os.makedirs(dir_path,exist_ok=True)
-            
-            logging.info(f"Exporting train and test file path.")
-            train_set.to_csv(self.data_ingestion_config.training_file_path,index=False,header=True)
-            test_set.to_csv(self.data_ingestion_config.testing_file_path,index=False,header=True)
-
-            logging.info(f"Exported train and test file path.")
-        except Exception as e:
-            raise USvisaException(e, sys) from e
+        if dataframe.empty:
+            logging.error("The provided dataframe is empty. Cannot perform train-test split.")
+            raise ValueError("The dataframe is empty. Cannot perform train-test split.")
         
-
+        try:
+            logging.info(f"Performing train-test split with ratio: {self.data_ingestion_config.train_test_split_ratio}")
+            train_set, test_set = train_test_split(dataframe, test_size=self.data_ingestion_config.train_test_split_ratio)
+            logging.info("Performed train-test split on the dataframe")
+            
+            dir_path = os.path.dirname(self.data_ingestion_config.training_file_path)
+            os.makedirs(dir_path, exist_ok=True)
+            
+            logging.info(f"Exporting train and test data to {self.data_ingestion_config.training_file_path} and {self.data_ingestion_config.testing_file_path}")
+            train_set.to_csv(self.data_ingestion_config.training_file_path, index=False, header=True)
+            test_set.to_csv(self.data_ingestion_config.testing_file_path, index=False, header=True)
+            
+            logging.info("Exported train and test data successfully")
+        
+        except Exception as e:
+            logging.error(f"An error occurred: {str(e)}")
+            raise USvisaException(e, sys) from e
 
     
     def initiate_data_ingestion(self) ->DataIngestionArtifact:
