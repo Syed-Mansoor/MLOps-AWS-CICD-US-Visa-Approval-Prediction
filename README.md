@@ -49,14 +49,14 @@ The Visa Prediction Project utilizes machine learning algorithms to predict visa
 
 ```bash
 git clone https://github.com/Syed-Mansoor/MLOps-AWS-CICD-US-Visa-Approval-Prediction.git
-cd visa-prediction-mlops
+cd MLOps-AWS-CICD-US-Visa-Approval-Prediction
 ```
 ## 2. Setup python environment
 #### 1.Create a virtual environment and install the dependencies:
 
-``` bash
-python -m venv venv
-source venv/bin/activate  
+``` conda
+conda create -p .usvisa python=3.8 -y
+conda activate .usvisa
 pip install -r requirements.txt
 ```
 #### 2.Install Docker if not already installed:
@@ -137,6 +137,7 @@ This project uses GitHub Actions to automate the deployment process:
 - GitHub Actions for CI/CD pipeline automation
 # License
 This project is licensed under the MIT License.
+
 
 
 
